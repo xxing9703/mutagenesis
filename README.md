@@ -1,2 +1,2 @@
 # mutagenesis
-This is a batch tool for create mutagenesis DNA sequence and display in excel with custom prefered format.
+This is a batch tool for creating mutagenesis DNA sequences and display them in excel with custom prefered format.
