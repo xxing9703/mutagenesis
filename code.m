@@ -5,14 +5,22 @@
 %*************************************************************************
 
 clear
-%con1=readtable('condon1a.txt','ReadVariableNames',false); %lower case, load condon table 1-1 for modifications 
-con1=readtable('condon1.txt','ReadVariableNames',false); %upper case, load condon table 1-1 for modifications
-con2=readtable('condon2.txt','ReadVariableNames',false);  %load condon table, for validation
+
+%****************** input files
+
+f_p='parent2.txt'; %original sequence
+f_con1='codon1.txt';% 1-1 codon table for modifications
+f_con2='codon2.txt';% 1-multi codon table for validation
+f_task='tab2.txt'; % mutation command list
+
+f_export='tab2cl.xlsx'; % output filename
+%***************************************************
+con1=readtable(f_con1,'ReadVariableNames',false); %upper case, load condon table 1-1 for modifications
+con2=readtable(f_con2,'ReadVariableNames',false);  %load condon table, for validation
 c1=table2cell(con1);
 c2=table2cell(con2);
-
-p=textread('parent2.txt','%c');  %original sequence
-p0=textread('parent00.txt','%c'); 
+p=textread(f_p,'%c'); 
+%p0=textread('parent00.txt','%c'); 
 %-----------------------------------
 for i=1:length(p)/3
  cc{i}=p(i*3-2:i*3)';
@@ -29,7 +37,7 @@ end
 
 
 %----------------------------------------------------modify tasks below
-f=fopen('tab2.txt');   %open task list, multiple ones using '/' to separate in the same line
+f=fopen(f_task);   %open task list, multiple ones using '/' to separate in the same line
 delimiter='/';
 
 tline = fgetl(f);  %start read line by line
@@ -80,11 +88,10 @@ end
   disp(tline)
 end
 
-savefile='tab2cl.xlsx';
-xlswrite(savefile,W)    % export to excel file
+xlswrite(f_export,W)    % export to excel file
 
 Excel = actxserver('excel.application');
-WB = Excel.Workbooks.Open(fullfile(pwd, savefile),0,false);
+WB = Excel.Workbooks.Open(fullfile(pwd, f_export),0,false);
 
 for i=1:clrcount   %find the cells, mark the color
  rg=strcat(ExcelCol(clr(i,2)),int2str(clr(i,1)));  
@@ -95,4 +102,3 @@ end
 
 WB.Close();
 Excel.Quit();
-
